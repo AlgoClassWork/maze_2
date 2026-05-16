@@ -40,7 +40,7 @@ background = transform.scale(background, (WINDOW_WIDTH, WINDOW_HEIGHT))
 # БАЗОВЫЙ КЛАСС СПРАЙТА
 # =========================================================
 
-class GameSprite:
+class GameSprite(sprite.Sprite):
     """
     Базовый класс для всех игровых объектов.
     
@@ -67,16 +67,18 @@ class GameSprite:
             (SPRITE_WIDTH, SPRITE_HEIGHT)
         )
 
+        self.rect = self.image.get_rect()
+
         # Координаты объекта
-        self.x = x
-        self.y = y
+        self.rect.x = x
+        self.rect.y = y
 
     def draw(self):
         """
         Отрисовывает объект на экране.
         """
 
-        window.blit(self.image, (self.x, self.y))
+        window.blit(self.image, (self.rect.x, self.rect.y))
 
 
 # =========================================================
@@ -103,20 +105,20 @@ class Player(GameSprite):
         keys = key.get_pressed()
 
         # Движение вверх
-        if keys[K_w] and self.y > 0:
-            self.y -= PLAYER_SPEED
+        if keys[K_w] and self.rect.y > 0:
+            self.rect.y -= PLAYER_SPEED
 
         # Движение вниз
-        if keys[K_s] and self.y < WINDOW_HEIGHT - SPRITE_HEIGHT:
-            self.y += PLAYER_SPEED
+        if keys[K_s] and self.rect.y < WINDOW_HEIGHT - SPRITE_HEIGHT:
+            self.rect.y += PLAYER_SPEED
 
         # Движение влево
-        if keys[K_a] and self.x > 0:
-            self.x -= PLAYER_SPEED
+        if keys[K_a] and self.rect.x > 0:
+            self.rect.x -= PLAYER_SPEED
 
         # Движение вправо
-        if keys[K_d] and self.x < WINDOW_WIDTH - SPRITE_WIDTH:
-            self.x += PLAYER_SPEED
+        if keys[K_d] and self.rect.x < WINDOW_WIDTH - SPRITE_WIDTH:
+            self.rect.x += PLAYER_SPEED
 
 
 # =========================================================
@@ -198,6 +200,10 @@ while game:
 
     hero.draw()
     enemy.draw()
+
+
+    if sprite.collide_rect(hero, enemy):
+        print('Ты проиграл')
 
     # -----------------------------------------------------
     # ОБНОВЛЕНИЕ ЭКРАНА
