@@ -126,22 +126,16 @@ class Player(GameSprite):
 # =========================================================
 
 class Enemy(GameSprite):
-    """
-    Класс врага.
-
-    Пока что умеет только отображаться,
-    но позже сюда можно добавить:
-    - движение
-    - ИИ
-    - стрельбу
-    """
-
     def move(self):
-        """
-        Метод движения врага.
-        Пока пустой.
-        """
-        pass
+        if self.rect.x <= 450:
+            self.side = 'right'
+        if self.rect.x >= 650:
+            self.side = 'left'
+
+        if self.side == 'left':
+            self.rect.x -= 5
+        else:
+            self.rect.x += 5
 
 
 # =========================================================
@@ -149,10 +143,13 @@ class Enemy(GameSprite):
 # =========================================================
 
 # Игрок
-hero = Player("hero.png", 200, 200)
+hero = Player("hero.png", 0, 450)
 
 # Враг
-enemy = Enemy("cyborg.png", 400, 200)
+enemy = Enemy("cyborg.png", 650, 300)
+
+# Цель
+goal = GameSprite("treasure.png", 650, 450)
 
 # =========================================================
 # ИГРОВОЙ ТАЙМЕР
@@ -200,10 +197,15 @@ while game:
 
     hero.draw()
     enemy.draw()
+    goal.draw()
 
-
+    # Условие поражения
     if sprite.collide_rect(hero, enemy):
         print('Ты проиграл')
+
+    # Условие победы
+    if sprite.collide_rect(hero, goal):
+        print('Ты победил')
 
     # -----------------------------------------------------
     # ОБНОВЛЕНИЕ ЭКРАНА
