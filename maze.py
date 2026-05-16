@@ -137,6 +137,21 @@ class Enemy(GameSprite):
         else:
             self.rect.x += 5
 
+# =========================================================
+# КЛАСС ВРАГА
+# =========================================================
+
+class Wall(sprite.Sprite):
+    def __init__(self, x, y, width, height):
+        self.image = Surface((width, height))
+        self.image.fill((0, 255, 0))
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+
+    def draw(self):
+        window.blit(self.image, (self.rect.x, self.rect.y))
+    
 
 # =========================================================
 # СОЗДАНИЕ ОБЪЕКТОВ
@@ -150,6 +165,10 @@ enemy = Enemy("cyborg.png", 650, 300)
 
 # Цель
 goal = GameSprite("treasure.png", 650, 450)
+
+# Стены
+wall1 = Wall(100, 100, 10, 400)
+wall2 = Wall(100, 100, 500, 10)
 
 # =========================================================
 # ИГРОВОЙ ТАЙМЕР
@@ -199,6 +218,9 @@ while game:
     enemy.draw()
     goal.draw()
 
+    wall1.draw()
+    wall2.draw()
+
     # Условие поражения
     if sprite.collide_rect(hero, enemy):
         print('Ты проиграл')
@@ -206,6 +228,11 @@ while game:
     # Условие победы
     if sprite.collide_rect(hero, goal):
         print('Ты победил')
+
+    # Условие столкновение со стеной
+    if sprite.collide_rect(hero, wall1):
+        hero.rect.x = 0
+        hero.rect.y = 450
 
     # -----------------------------------------------------
     # ОБНОВЛЕНИЕ ЭКРАНА
